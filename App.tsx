@@ -377,7 +377,7 @@ const App: React.FC = () => {
               {/* <div onClick={() => setShowMap(true)} className="cursor-pointer w-full h-full"> */}
                 <img
                   onClick={() => setShowMap(true)}
-                  src="./img/mapl.png"
+                  src="/mapl.png"
                   alt="Stylized map"
                   className="object-contain w-full h-full transition hover:opacity-90 cursor-pointer"
                 />
