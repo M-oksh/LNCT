@@ -1,0 +1,6 @@
+{
+  "name": "Main copy of LNCT",
+  "description": "A React web application mimicking a modern corporate UI, inspired by LNCT Group, built with Tailwind CSS and TypeScript. It features a dynamic hero section carousel, navigation bar, news, social feed, and cookie consent banner.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

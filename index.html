@@ -1,0 +1,319 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LNCT Group Inspired UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html, body, #root {
+            height: 100%; 
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; 
+        }
+        html {
+            scroll-behavior: smooth; /* Added for smooth anchor scrolling */
+        }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #FFFFFF; /* White background */
+            color: #334155; /* slate-700 default text color */
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9; /* Tailwind slate-100 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94A3B8; /* Tailwind slate-400 */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #FDE047, #FACC15, #EAB308); /* Golden gradient (yellow-300, yellow-400, yellow-500) */
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @keyframes golden-shimmer-bg { 
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .golden-shimmer-bg-hover:hover { 
+            background-image: linear-gradient(
+                to right,
+                transparent 20%,
+                rgba(250, 204, 21, 0.2),  /* yellow-400 lighter shimmer */
+                rgba(234, 179, 8, 0.3),  /* yellow-500 */
+                rgba(250, 204, 21, 0.2),
+                transparent 80%
+            );
+            background-size: 200% auto;
+            animation: golden-shimmer-bg 1.2s linear infinite;
+        }
+        .blue-shimmer-bg-hover:hover, /* Alias for compatibility */
+        .amber-shimmer-bg-hover:hover { /* Keep amber for potential backward compatibility, but styled as golden */
+            background-image: linear-gradient(
+                to right,
+                transparent 20%,
+                rgba(250, 204, 21, 0.2),
+                rgba(234, 179, 8, 0.3),
+                rgba(250, 204, 21, 0.2),
+                transparent 80%
+            );
+            background-size: 200% auto;
+            animation: golden-shimmer-bg 1.2s linear infinite;
+        }
+
+        .subtle-noise-overlay {
+            position: relative; 
+        }
+        .subtle-noise-overlay::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(45deg, rgba(0,0,0,0.015) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.015) 75%, rgba(0,0,0,0.015)),
+                linear-gradient(45deg, rgba(0,0,0,0.01) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.01) 75%, rgba(0,0,0,0.01));
+            background-size: 3px 3px;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 1; 
+        }
+
+        /* Page Turn Achievement Card Styles */
+        .page-turn-perspective-container {
+          perspective: 1200px; 
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+          transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          border-radius: 1.5rem; /* 24px - for smooth rectangle shape */
+          overflow: hidden; /* Ensures inner square faces are clipped by the border-radius */
+        }
+        
+        .page-turn-perspective-container.hovered {
+          transform: scale(1.05); 
+          box-shadow: 0 10px 30px rgba(234, 179, 8, 0.3), 0 0 15px rgba(250, 204, 21, 0.15); /* Golden shadow (yellow-500, yellow-400) */
+        }
+
+        .page-turn-card {
+          width: 100%;
+          height: 100%;
+          position: relative;
+          transform-style: preserve-3d;
+          transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .page-turn-card.flipping {
+          transform: rotateY(-180deg);
+        }
+        
+        .page-face-content {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          backface-visibility: hidden;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 1.25rem; 
+          box-sizing: border-box;
+          background-color: #FFFFFF; 
+          box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); 
+          color: #334155; 
+          text-align: center;
+        }
+        
+        .page-turn-perspective-container.hovered .page-face-content {
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.3), 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); /* Golden shadow */
+        }
+
+        .page-face-content--front {
+          transform: rotateY(0deg);
+        }
+
+        .page-face-content--back {
+          transform: rotateY(180deg);
+        }
+        
+        .page-content-icon {
+          width: 2.5rem; 
+          height: 2.5rem; 
+          margin-bottom: 0.75rem; 
+        }
+        .page-content-year {
+          font-size: 1rem; 
+          font-weight: 600; 
+          text-transform: uppercase;
+          letter-spacing: 0.05em; 
+          margin-bottom: 0.375rem; 
+        }
+        .page-content-title {
+          font-size: 1.25rem; 
+          font-weight: 700; 
+          margin-bottom: 0.75rem; 
+          line-height: 1.35;
+          color: #1E293B; 
+        }
+        .page-content-description {
+          font-size: 1rem; 
+          color: #475569; 
+          line-height: 1.5; 
+          max-height: 96px; 
+          overflow: hidden;
+          text-overflow: ellipsis; 
+          display: -webkit-box;
+          -webkit-line-clamp: 4; 
+          -webkit-box-orient: vertical;
+        }
+
+        /* Quadrant Section Abstract Background */
+        .quadrant-section-abstract-bg-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; 
+            display: flex; 
+        }
+
+        .quadrant-abstract-bg { 
+            width: 50%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(12px) brightness(0.85);
+            transform: scale(1.1); 
+        }
+
+        .yellow-abstract-bg { /* Represents "golden" by association */
+            background-image: url('https://picsum.photos/seed/goldenAbstractArt/800/600'); 
+        }
+
+        .black-abstract-bg {
+            background-image: url('https://picsum.photos/seed/blackAbstractArt/800/600'); 
+        }
+
+        /* Animation for About Us blobs */
+        @keyframes pulse-slow {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.6; /* Example base opacity */
+          }
+          50% {
+            transform: scale(1.05); /* Example hover opacity */
+            opacity: 0.8;
+          }
+        }
+        .animate-pulse-slow {
+          animation: pulse-slow infinite;
+        }
+       
+        /* Animations for Loading Screen Text Intro */
+        @keyframes letter-enter-effect {
+          0% {
+            opacity: 0;
+            transform: translateY(15px) scale(0.85);
+            filter: blur(3px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0px) scale(1);
+            filter: blur(0px);
+          }
+        }
+        .letter-element {
+          display: inline-block; /* Important for transform and pseudo-elements */
+          position: relative; /* For pseudo-element positioning */
+          opacity: 0; /* Start hidden until animation class is applied */
+          overflow: hidden; /* To contain the glint sweep */
+        }
+        .animate-letter-enter {
+          opacity: 1; /* Make visible when animation starts */
+          animation-name: letter-enter-effect;
+          animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000); /* EaseOutCubic */
+          animation-fill-mode: forwards;
+          /* animation-duration is set inline in TSX */
+        }
+
+        @keyframes golden-glint-sweep {
+          0% {
+            left: -120%; /* Start off-screen to the left */
+            opacity: 0.5;
+          }
+          40%, 60% { /* Linger slightly in the middle for visibility */
+            left: 50%;
+            transform: translateX(-50%) skewX(-25deg);
+            opacity: 0.8;
+          }
+          100% {
+            left: 220%; /* End off-screen to the right */
+            opacity: 0.5;
+          }
+        }
+        
+        .animate-glint-sweep::after {
+          content: '';
+          position: absolute;
+          top: -10%; /* Extend slightly beyond letter bounds for better visual */
+          left: -120%; /* Start off-screen */
+          width: 60%; /* Width of the glint element */
+          height: 120%; /* Extend slightly beyond letter bounds */
+          background: linear-gradient(
+            100deg,
+            transparent 20%,
+            rgba(253, 224, 71, 0.7), /* yellow-300 with opacity */
+            rgba(250, 204, 21, 0.9), /* yellow-400 with opacity */
+            rgba(234, 179, 8, 0.7), /* yellow-500 with opacity */
+            transparent 80%
+          );
+          transform: skewX(-25deg); /* Diagonal slant */
+          opacity: 0; /* Start transparent, animation will handle opacity */
+          animation-name: golden-glint-sweep;
+          animation-timing-function: ease-in-out;
+          animation-fill-mode: forwards;
+           /* animation-duration and animation-delay are set inline in TSX */
+        }
+
+
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "react": "https://esm.sh/react@^19.1.0"
+  }
+}
+</script>
+<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC61M4ur5FjTVQZwYf3OU2oDk_-4l2_kLc&libraries=marker"></script> -->
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC61M4ur5FjTVQZwYf3OU2oDk_-4l2_kLc&libraries=marker"></script> -->
+</body>
+</html>
